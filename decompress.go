@@ -20,6 +20,7 @@ func decompress(b []byte, off int) (string, int) {
 			offset := binary.BigEndian.Uint16([]byte{c ^ 0xc0, b[off]})
 			s, _ := decompress(b, int(offset))
 			buf.WriteString(s)
+			off++
 			break
 		} else {
 			if c == 0x0 {

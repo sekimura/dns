@@ -13,7 +13,7 @@ func Unpack(b []byte) (*Message, error) {
 	m.Header.ARcount = binary.BigEndian.Uint16(b[10:12])
 
 	off := 12
-	qname, n := decompress(b, 12)
+	qname, n := decompress(b, off)
 	m.QName = qname
 	off += n
 
@@ -50,8 +50,9 @@ func Unpack(b []byte) (*Message, error) {
 }
 
 func unpackRR(b []byte, off int, rr *RR) int {
-	name, _ := decompress(b, off)
+	name, n := decompress(b, off)
 	rr.Name = name
+	off += n
 
 	rr.Type = binary.BigEndian.Uint16(b[off : off+2])
 	off += 2
