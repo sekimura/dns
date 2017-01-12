@@ -1,1 +1,1 @@
-# dns
+# A Go (golang) package for DNS
