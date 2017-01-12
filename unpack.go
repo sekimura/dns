@@ -1,6 +1,9 @@
 package dns
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"net"
+)
 
 func Unpack(b []byte) (*Message, error) {
 	m := new(Message)
@@ -50,6 +53,7 @@ func Unpack(b []byte) (*Message, error) {
 }
 
 func unpackRR(b []byte, off int, rr *RR) int {
+	off0 := off
 	name, n := decompress(b, off)
 	rr.Name = name
 	off += n
@@ -62,7 +66,20 @@ func unpackRR(b []byte, off int, rr *RR) int {
 	off += 4
 	rr.RDLength = binary.BigEndian.Uint16(b[off : off+2])
 	off += 2
-	rr.RData = b[off : off+int(rr.RDLength)]
 
-	return 10 + int(rr.RDLength)
+	switch rr.Type {
+	case QtypeCNAME:
+		name, _ := decompress(b, off)
+		rr.RData = name
+	case QtypeA:
+		rr.RData = net.IP(b[off : off+int(rr.RDLength)])
+	case QtypeAAAA:
+		rr.RData = net.IP(b[off : off+int(rr.RDLength)])
+	default:
+		rr.RData = b[off : off+int(rr.RDLength)]
+	}
+
+	off += int(rr.RDLength)
+
+	return off - off0
 }

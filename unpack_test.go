@@ -1,7 +1,7 @@
 package dns
 
 import (
-	"fmt"
+	"net"
 	"testing"
 )
 
@@ -32,9 +32,12 @@ func TestUnpack(t *testing.T) {
 	if int(msg.Answer[0].RDLength) != 4 {
 		t.Error("got wrong rd length")
 	}
-	v := fmt.Sprintf("%#x", msg.Answer[0].RData)
-	if v != "0xadfff8c5" {
-		t.Error("got wrong RData", v)
+	ip, ok := msg.Answer[0].RData.(net.IP)
+	if !ok {
+		t.Error("got wrong RData", ip)
+	}
+	if ip.String() != "173.255.248.197" {
+		t.Error("got wrong RData", ip.String())
 	}
 
 }

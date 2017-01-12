@@ -25,13 +25,13 @@ type RR struct {
 	Class    uint16
 	TTL      uint32
 	RDLength uint16
-	RData    []byte
+	RData    interface{}
 }
 
 const (
 	QtypeA     uint16 = 0x1
-	QtypeAAAA         = 0x5
-	QtypeCNAME        = 0x1c
+	QtypeCNAME        = 0x5
+	QtypeAAAA         = 0x1c
 
 	QclassIN uint16 = 0x1
 )
