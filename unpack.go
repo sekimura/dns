@@ -8,12 +8,12 @@ import (
 func Unpack(b []byte) (*Message, error) {
 	m := new(Message)
 
-	m.Header.ID = binary.BigEndian.Uint16(b[0:2])
-	m.Header.Flags = binary.BigEndian.Uint16(b[2:4])
-	m.Header.QDcount = binary.BigEndian.Uint16(b[4:6])
-	m.Header.ANcount = binary.BigEndian.Uint16(b[6:8])
-	m.Header.NScount = binary.BigEndian.Uint16(b[8:10])
-	m.Header.ARcount = binary.BigEndian.Uint16(b[10:12])
+	m.ID = binary.BigEndian.Uint16(b[0:2])
+	m.Flags = binary.BigEndian.Uint16(b[2:4])
+	m.QDcount = binary.BigEndian.Uint16(b[4:6])
+	m.ANcount = binary.BigEndian.Uint16(b[6:8])
+	m.NScount = binary.BigEndian.Uint16(b[8:10])
+	m.ARcount = binary.BigEndian.Uint16(b[10:12])
 
 	off := 12
 	qname, n := decompress(b, off)
@@ -25,24 +25,24 @@ func Unpack(b []byte) (*Message, error) {
 	m.Qclass = binary.BigEndian.Uint16(b[off : off+2])
 	off += 2
 
-	m.Answer = make([]RR, int(m.Header.ANcount))
-	for i := 0; i < int(m.Header.ANcount); i++ {
+	m.Answer = make([]RR, int(m.ANcount))
+	for i := 0; i < int(m.ANcount); i++ {
 		rr := RR{}
 		n := unpackRR(b, off, &rr)
 		m.Answer[i] = rr
 		off += n
 	}
 
-	m.Authority = make([]RR, int(m.Header.NScount))
-	for i := 0; i < int(m.Header.NScount); i++ {
+	m.Authority = make([]RR, int(m.NScount))
+	for i := 0; i < int(m.NScount); i++ {
 		rr := RR{}
 		n := unpackRR(b, off, &rr)
 		m.Authority[i] = rr
 		off += n
 	}
 
-	m.Additional = make([]RR, int(m.Header.ARcount))
-	for i := 0; i < int(m.Header.ARcount); i++ {
+	m.Additional = make([]RR, int(m.ARcount))
+	for i := 0; i < int(m.ARcount); i++ {
 		rr := RR{}
 		n := unpackRR(b, off, &rr)
 		m.Additional[i] = rr

@@ -26,7 +26,7 @@ func TestUnpack(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if int(msg.Header.ANcount) != len(msg.Answer) {
+	if int(msg.ANcount) != len(msg.Answer) {
 		t.Error("got wrong answer number")
 	}
 	if int(msg.Answer[0].RDLength) != 4 {

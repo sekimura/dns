@@ -1,22 +1,18 @@
 package dns
 
 type Message struct {
-	Header     Header
+	ID         uint16
+	Flags      uint16
+	QDcount    uint16
+	ANcount    uint16
+	NScount    uint16
+	ARcount    uint16
 	QName      string
 	Qtype      uint16
 	Qclass     uint16
 	Answer     []RR
 	Authority  []RR
 	Additional []RR
-}
-
-type Header struct {
-	ID      uint16
-	Flags   uint16
-	QDcount uint16
-	ANcount uint16
-	NScount uint16
-	ARcount uint16
 }
 
 type RR struct {
