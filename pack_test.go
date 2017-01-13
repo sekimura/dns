@@ -27,10 +27,10 @@ func TestPack(t *testing.T) {
 	if b[29] != 0x0 {
 		t.Error("missing the termination")
 	}
-	if QtypeA != binary.BigEndian.Uint16(b[29:31]) {
+	if QtypeA != binary.BigEndian.Uint16(b[30:32]) {
 		t.Errorf("Qtype did not match")
 	}
-	if QclassIN != binary.BigEndian.Uint16(b[31:33]) {
+	if QclassIN != binary.BigEndian.Uint16(b[32:34]) {
 		t.Error("Qclass did not match")
 	}
 }

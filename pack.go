@@ -26,6 +26,7 @@ func Pack(m *Message) ([]byte, error) {
 			l++
 		}
 	}
+	off++
 
 	binary.BigEndian.PutUint16(b[off:off+2], m.Qtype)
 	off += 2
