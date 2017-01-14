@@ -7,9 +7,12 @@ import (
 
 func TestPack(t *testing.T) {
 	m := &Message{
-		QName:  "www.sekimura.org.",
-		Qtype:  QtypeA,
-		Qclass: QclassIN,
+		Question: make([]Q, 1),
+	}
+	m.Question[0] = Q{
+		Name:  "www.sekimura.org.",
+		Type:  QtypeA,
+		Class: QclassIN,
 	}
 	b, err := Pack(m)
 	if err != nil {
