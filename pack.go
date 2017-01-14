@@ -14,25 +14,28 @@ func Pack(m *Message) ([]byte, error) {
 
 	off := 12
 
-	l := 0
-	for i := 0; i < len(m.QName); i++ {
-		if m.QName[i] == 0x2e { // "."
-			b[off] = uint8(l)
-			off++
-			copy(b[off:off+l], m.QName[i-l:i])
-			off += l
-			l = 0
-		} else {
-			l++
+	for i := 0; i < len(m.Question); i++ {
+		l := 0
+		q := m.Question[i]
+		for i := 0; i < len(q.Name); i++ {
+			if q.Name[i] == 0x2e { // "."
+				b[off] = uint8(l)
+				off++
+				copy(b[off:off+l], q.Name[i-l:i])
+				off += l
+				l = 0
+			} else {
+				l++
+			}
 		}
+		off++
+
+		binary.BigEndian.PutUint16(b[off:off+2], q.Type)
+		off += 2
+
+		binary.BigEndian.PutUint16(b[off:off+2], q.Class)
+		off += 2
 	}
-	off++
-
-	binary.BigEndian.PutUint16(b[off:off+2], m.Qtype)
-	off += 2
-
-	binary.BigEndian.PutUint16(b[off:off+2], m.Qclass)
-	off += 2
 
 	// TODO: support RRs
 	return b[:off], nil

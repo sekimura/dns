@@ -1,5 +1,11 @@
 package dns
 
+type Q struct {
+	Name  string
+	Type  uint16
+	Class uint16
+}
+
 type Message struct {
 	ID         uint16
 	Flags      uint16
@@ -7,9 +13,7 @@ type Message struct {
 	ANcount    uint16
 	NScount    uint16
 	ARcount    uint16
-	QName      string
-	Qtype      uint16
-	Qclass     uint16
+	Question   []Q
 	Answer     []RR
 	Authority  []RR
 	Additional []RR
@@ -25,9 +29,16 @@ type RR struct {
 }
 
 const (
-	QtypeA     uint16 = 0x1
-	QtypeCNAME        = 0x5
-	QtypeAAAA         = 0x1c
+	QtypeA     uint16 = 1
+	QtypeNS           = 2
+	QtypeCNAME        = 5
+	QtypeSOA          = 6
+	QtypeWKS          = 11
+	QtypePTR          = 12
+	QtypeMX           = 15
+	QtypeSRV          = 33
+	QtypeAAAA         = 28
+	QtypeANY          = 255
 
 	QclassIN uint16 = 0x1
 )

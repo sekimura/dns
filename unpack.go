@@ -16,14 +16,18 @@ func Unpack(b []byte) (*Message, error) {
 	m.ARcount = binary.BigEndian.Uint16(b[10:12])
 
 	off := 12
-	qname, n := decompress(b, off)
-	m.QName = qname
-	off += n
 
-	m.Qtype = binary.BigEndian.Uint16(b[off : off+2])
-	off += 2
-	m.Qclass = binary.BigEndian.Uint16(b[off : off+2])
-	off += 2
+	m.Question = make([]Q, int(m.QDcount))
+	for i := 0; i < len(m.Question); i++ {
+		qname, n := decompress(b, off)
+		off += n
+
+		qtype := binary.BigEndian.Uint16(b[off : off+2])
+		off += 2
+		qclass := binary.BigEndian.Uint16(b[off : off+2])
+		off += 2
+		m.Question[i] = Q{Name: qname, Type: qtype, Class: qclass}
+	}
 
 	m.Answer = make([]RR, int(m.ANcount))
 	for i := 0; i < int(m.ANcount); i++ {
